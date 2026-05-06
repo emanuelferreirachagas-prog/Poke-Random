@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Poke-Random</string>
+    <string name="title_escolha">ESCOLHA</string>
+    <string name="title_aleatoria">ALEATORIA</string>
+    <string name="button_start">Start</string>
+    <string name="button_options">Options</string>
 </resources>
