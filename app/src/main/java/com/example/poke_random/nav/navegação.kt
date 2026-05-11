@@ -8,9 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.poke_random.Telas.MenuScreen
-import com.example.poke_random.Telas.PerguntaScreen
-import com.example.poke_random.Telas.TelaInicial
+import com.example.poke_random.telas.MenuScreen
+import com.example.poke_random.telas.PerguntaScreen
+import com.example.poke_random.telas.TelaInicial
 
 @Composable
 fun AppNavigation(){

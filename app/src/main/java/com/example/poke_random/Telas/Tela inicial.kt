@@ -1,4 +1,4 @@
-package com.example.poke_random.Telas
+package com.example.poke_random.telas
 
 import android.graphics.LinearGradient
 import android.graphics.Matrix

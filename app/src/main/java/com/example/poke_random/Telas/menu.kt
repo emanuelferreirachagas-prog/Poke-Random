@@ -1,4 +1,4 @@
-package com.example.poke_random.Telas
+package com.example.poke_random.telas
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas

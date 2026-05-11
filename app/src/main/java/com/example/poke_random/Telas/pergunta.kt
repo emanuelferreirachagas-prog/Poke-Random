@@ -1,4 +1,4 @@
-package com.example.poke_random.Telas
+package com.example.poke_random.telas
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
@@ -58,11 +58,13 @@ fun PerguntaScreen(
         ), label = "angle"
     )
 
-    LaunchedEffect(Unit) { startFade = true }
+    LaunchedEffect(Unit) { 
+        startFade = true 
+    }
 
-    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+    Box(modifier = modifier.fillMaxSize().background(Color.Black)) {
 
-        // --- FUNDO: Pokébola Girando (Padronizada) ---
+        // --- FUNDO: Pokébola Girando ---
         PokeBallSilhouetteBackground(
             modifier = Modifier
                 .size(600.dp)
@@ -74,7 +76,7 @@ fun PerguntaScreen(
         // --- CONTEÚDO ---
         Box(modifier = Modifier.fillMaxSize()) {
             
-            // Professor Oak (Padronizado com scale 1.2f e offset -20dp)
+            // Professor Oak
             Image(
                 painter = painterResource(id = R.drawable.professorv2_1),
                 contentDescription = null,
@@ -87,11 +89,11 @@ fun PerguntaScreen(
                 contentScale = ContentScale.Fit
             )
 
-            // Botões de Escolha (Só aparecem no fim do texto)
+            // Botões de Escolha
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 180.dp) // Posicionados logo acima da caixa
+                    .padding(bottom = 180.dp)
             ) {
                 AnimatedVisibility(
                     visible = showButtons,
@@ -107,7 +109,7 @@ fun PerguntaScreen(
                 }
             }
 
-            // Caixa de Diálogo (Padronizada com height 140dp)
+            // Caixa de Diálogo
             TypewriterDialogBox(
                 text = stringResource(id = R.string.dialog_reroll_pokemon),
                 modifier = Modifier
@@ -145,7 +147,7 @@ fun TypewriterDialogBox(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(140.dp) // Tamanho idêntico ao da MenuScreen
+            .height(140.dp)
             .background(Color.White, RoundedCornerShape(15.dp))
             .border(5.dp, Color(0xFF29B6F6), RoundedCornerShape(15.dp))
             .padding(20.dp)
