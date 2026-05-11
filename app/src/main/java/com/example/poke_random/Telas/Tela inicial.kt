@@ -149,7 +149,7 @@ fun TelaInicial(modifier: Modifier = Modifier, navController: NavController? = n
                 text = stringResource(id = R.string.button_start),
                 onClick = {
                     soundPool.play(soundId, 1f, 1f, 0, 0, 1f)
-                    // navController?.navigate("proxima_tela")
+                    navController?.navigate("menu")
                 }
             )
 

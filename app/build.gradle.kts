@@ -52,5 +52,6 @@ dependencies {
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui.graphics)
+    debugImplementation(libs.androidx.compose.ui.tooling)
     testImplementation(libs.junit)
 }

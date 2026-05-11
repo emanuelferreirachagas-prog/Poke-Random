@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.poke_random.Telas.MenuScreen
+import com.example.poke_random.Telas.PerguntaScreen
 import com.example.poke_random.Telas.TelaInicial
 
 @Composable
@@ -19,5 +21,7 @@ fun AppNavigation(){
         exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) + fadeOut() }
     ) {
         composable("Login") { TelaInicial(navController = navController) }
+        composable ("menu") { MenuScreen(navController = navController) }
+        composable ("pergunta"){ PerguntaScreen(navController = navController) }
     }
 }

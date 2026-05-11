@@ -4,4 +4,8 @@
     <string name="title_aleatoria">ALEATORIA</string>
     <string name="button_start">Start</string>
     <string name="button_options">Options</string>
+    <string name="oak_dialog_text">Olá! Bem-vindo ao mundo de POKÉMON! Meu nome é OAK!...</string>
+    <string name="button_yes">Sim</string>
+    <string name="button_no">Não</string>
+    <string name="dialog_reroll_pokemon">Deseja roletar seu pokemon ? ...</string>
 </resources>
