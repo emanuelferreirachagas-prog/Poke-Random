@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import android.graphics.Shader
 import android.media.AudioAttributes
 import android.media.SoundPool
+import androidx.annotation.OptIn
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -35,6 +36,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.RawResourceDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.NavController
@@ -43,6 +45,7 @@ import com.example.poke_random.ui.theme.PokeRandomTheme
 import kotlinx.coroutines.delay
 
 
+@OptIn(UnstableApi::class)
 @Composable
 fun TelaInicial(modifier: Modifier = Modifier, navController: NavController? = null) {
     val context = LocalContext.current
