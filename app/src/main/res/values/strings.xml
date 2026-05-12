@@ -7,5 +7,8 @@
     <string name="oak_dialog_text">Olá! Bem-vindo ao mundo de POKÉMON! Meu nome é OAK!...</string>
     <string name="button_yes">Sim</string>
     <string name="button_no">Não</string>
-    <string name="dialog_reroll_pokemon">Deseja roletar seu pokemon ? ...</string>
+    <string name="pokemon_name_charmander">Charmander</string>
+    <string name="pokemon_type_fire">FIRE</string>
+    <string name="pokemon_desc_charmander">é um Pokémon do tipo Fogo,\nintroduzido na Geração 1,\nreconhecível pela chama na\nponta de sua cauda que\nindica sua saúde e emoções.</string>
+    <string name="dialog_reroll_pokemon_novamente">Deseja roletar seu\npokemon novamente? …</string>
 </resources>

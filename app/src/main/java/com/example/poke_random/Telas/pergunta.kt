@@ -111,7 +111,7 @@ fun PerguntaScreen(
 
             // Caixa de Diálogo
             TypewriterDialogBox(
-                text = stringResource(id = R.string.dialog_reroll_pokemon),
+                text = stringResource(id = R.string.dialog_reroll_pokemon_novamente),
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 50.dp)
@@ -184,7 +184,7 @@ fun PokemonChoiceButton(text: String, onClick: () -> Unit) {
 }
 
 @Composable
-private fun PokeBallSilhouetteBackground(modifier: Modifier = Modifier) {
+fun PokeBallSilhouetteBackground(modifier: Modifier = Modifier) {
     Canvas(modifier = modifier) {
         val radius = size.minDimension / 2
         val center = Offset(size.width / 2, size.height / 2)
