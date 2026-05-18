@@ -20,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,8 +42,9 @@ fun MenuScreen(navController: NavController, modifier: Modifier = Modifier) {
         label = "FadeInMenu"
     )
 
-    // Inicia a animação assim que a tela é montada
+    // Inicia a animação com um pequeno delay para garantir que o hardware processou a tela
     LaunchedEffect(Unit) {
+        kotlinx.coroutines.yield() // Espera o processamento inicial
         startFade = true
     }
 
@@ -120,7 +122,7 @@ fun MenuScreen(navController: NavController, modifier: Modifier = Modifier) {
 fun OakDialogBox(
     fullText: String, 
     modifier: Modifier = Modifier, 
-    onTextFinished: () -> Unit // Novo parâmetro para avisar que acabou
+    onTextFinished: () -> Unit
 ) {
     var displayedText by remember { mutableStateOf("") }
 
@@ -131,7 +133,7 @@ fun OakDialogBox(
             delay(50) 
         }
         
-        // 2. Pausa de 1.5 segundos para leitura após terminar
+        // 2. Pausa para leitura após terminar
         delay(1500) 
 
         // 3. Chama a função de navegação
@@ -142,10 +144,12 @@ fun OakDialogBox(
         modifier = modifier
             .fillMaxWidth()
             .height(150.dp)
+            // Fundo branco com cantos arredondados
             .background(Color.White, RoundedCornerShape(20.dp))
+            // Borda azul vibrante grossa (Padronizada com as outras telas)
             .border(
                 width = 6.dp,
-                color = Color(0xFF29B6F6),
+                color = Color(0xFF00B0FF), // Azul vibrante padronizado
                 shape = RoundedCornerShape(20.dp)
             )
             .padding(20.dp),
@@ -154,9 +158,10 @@ fun OakDialogBox(
         Text(
             text = displayedText,
             color = Color.Black,
-            fontSize = 24.sp,
-            fontFamily = FontFamily.Monospace,
-            lineHeight = 30.sp
+            fontSize = 22.sp, // Tamanho ajustado para legibilidade
+            fontFamily = FontFamily.Monospace, // Fonte estilo retro/pixel
+            fontWeight = FontWeight.Bold, // Texto em negrito como na imagem
+            lineHeight = 30.sp // Espaçamento entre linhas
         )
     }
 }

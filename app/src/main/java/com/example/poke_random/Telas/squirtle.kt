@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -28,12 +32,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.poke_random.R
+import com.example.poke_random.ui.theme.PokeRandomTheme
+import kotlinx.coroutines.yield
+import kotlinx.coroutines.delay
 
 @Composable
 fun SquirtleScreen(
     onSimClick: () -> Unit = {},
     onNaoClick: () -> Unit = {}
 ) {
+    // Adicionado para otimização de transição
+    LaunchedEffect(Unit) {
+        yield()
+    }
+
     val infiniteTransition = rememberInfiniteTransition(label = "Rotate")
     val angle by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -56,7 +68,7 @@ fun SquirtleScreen(
 
         // 2. POKÉBOLA NO TOPO (Silhueta escura)
         Image(
-            painter = painterResource(id = R.drawable.oficial_2),
+            painter = painterResource(id = R.drawable.d6c8052634e93ac1f777a3e38b2ebf8a_removebg_preview),
             contentDescription = null,
             modifier = Modifier
                 .size(450.dp)
@@ -70,7 +82,7 @@ fun SquirtleScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 30.dp),
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(100.dp))
@@ -98,7 +110,7 @@ fun SquirtleScreen(
                     fontWeight = FontWeight.ExtraBold,
                     fontFamily = FontFamily.Monospace,
                     brush = Brush.verticalGradient(
-                        colors = listOf(Color.White, Color(0xFFBDBDBD), Color(0xFF424242))
+                        colors = listOf(Color.White, Color(0xFFBDBDBD), Color(0xFF043556))
                     ),
                     shadow = Shadow(color = Color.Black, blurRadius = 10f)
                 )
@@ -151,7 +163,7 @@ fun SquirtleScreen(
 
             // 7. BOTÕES SIM/NÃO (Padronizados)
             Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 SquirtleChoiceButton(text = "Sim", onClick = onSimClick)
@@ -160,7 +172,7 @@ fun SquirtleScreen(
 
             // 8. CAIXA DE DIÁLOGO
             SquirtleDialogBox(text = "Deseja roletar seu pokemon novamente? ...")
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(60.dp))
         }
     }
 }
@@ -169,16 +181,16 @@ fun SquirtleScreen(
 fun SquirtleChoiceButton(text: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .width(130.dp)
-            .height(50.dp)
-            .background(Color.White, RoundedCornerShape(25.dp))
-            .border(4.dp, Color(0xFF00B0FF), RoundedCornerShape(25.dp))
+            .width(135.dp)
+            .height(55.dp)
+            .background(Color.White, RoundedCornerShape(30.dp))
+            .border(4.dp, Color(0xFF00B0FF), RoundedCornerShape(30.dp))
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
-            color = Color(0xFFD32F2F),
+            color = Color.Red,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace
@@ -188,21 +200,33 @@ fun SquirtleChoiceButton(text: String, onClick: () -> Unit) {
 
 @Composable
 fun SquirtleDialogBox(text: String) {
+    var displayedText by remember { mutableStateOf("") }
+
+    LaunchedEffect(text) {
+        delay(500)
+        text.forEachIndexed { index, _ ->
+            displayedText = text.substring(0, index + 1)
+            delay(40)
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
+            .height(130.dp)
             .background(Color.White, RoundedCornerShape(20.dp))
-            .border(5.dp, Color(0xFF00B0FF), RoundedCornerShape(20.dp))
-            .padding(16.dp),
-        contentAlignment = Alignment.CenterStart
+            .border(6.dp, Color(0xFF00B0FF), RoundedCornerShape(20.dp))
+            .padding(20.dp),
+        contentAlignment = Alignment.TopStart
     ) {
         Text(
-            text = text,
+            text = displayedText,
             color = Color.Black,
-            fontSize = 18.sp,
+            fontSize = 20.sp,
             fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Start,
+            lineHeight = 28.sp
         )
     }
 }

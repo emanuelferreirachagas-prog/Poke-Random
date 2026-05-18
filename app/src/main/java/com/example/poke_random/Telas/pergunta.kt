@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Fill
@@ -27,17 +26,19 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.poke_random.R
+import com.example.poke_random.ui.theme.PokeRandomTheme
 import kotlinx.coroutines.delay
 
 @Composable
 fun PerguntaScreen(
-    navController: NavController,
+    navController: NavController, // Adicione o NavController aqui
     modifier: Modifier = Modifier,
-    onSimClick: () -> Unit = {},
     onNaoClick: () -> Unit = {}
-) {
+){
     // 1. Estados de Animação e Controle
     var startFade by remember { mutableStateOf(false) }
     var showButtons by remember { mutableStateOf(false) }
@@ -58,8 +59,10 @@ fun PerguntaScreen(
         ), label = "angle"
     )
 
-    LaunchedEffect(Unit) { 
-        startFade = true 
+    // Inicia a animação com um pequeno delay para garantir que o hardware processou a tela
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.yield() // Espera o processamento inicial
+        startFade = true
     }
 
     Box(modifier = modifier.fillMaxSize().background(Color.Black)) {
@@ -67,8 +70,8 @@ fun PerguntaScreen(
         // --- FUNDO: Pokébola Girando ---
         PokeBallSilhouetteBackground(
             modifier = Modifier
-                .size(600.dp)
-                .offset(x = (-150).dp, y = (-80).dp)
+                .size(500.dp)
+                .offset(x = (-100).dp, y = (-100).dp)
                 .rotate(angle)
                 .align(Alignment.TopStart)
         )
@@ -81,43 +84,50 @@ fun PerguntaScreen(
                 painter = painterResource(id = R.drawable.professorv2_1),
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxHeight(0.85f)
+                    .fillMaxHeight(0.7f)
                     .fillMaxWidth()
-                    .scale(1.2f) 
                     .align(Alignment.Center)
-                    .offset(y = (-20).dp),
+                    .offset(y = (-10).dp),
                 contentScale = ContentScale.Fit
             )
 
-            // Botões de Escolha
+            // Bottom Content: Botões de Escolha e Caixa de Diálogo
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 180.dp)
+                    .padding(bottom = 60.dp)
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AnimatedVisibility(
                     visible = showButtons,
                     enter = fadeIn(animationSpec = tween(500))
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 12.dp),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        PokemonChoiceButton(text = "Sim", onClick = onSimClick)
-                        PokemonChoiceButton(text = "Não", onClick = onNaoClick)
+                        // BOTÃO SIM SIMPLIFICADO
+                        PokemonChoiceButton(
+                            text = "Sim", 
+                            onClick = { navController.navigate("tela_roll") } 
+                        )
+
+                        // BOTÃO NÃO
+                        PokemonChoiceButton(
+                            text = "Não", 
+                            onClick = onNaoClick 
+                        )
                     }
                 }
-            }
 
-            // Caixa de Diálogo
-            TypewriterDialogBox(
-                text = stringResource(id = R.string.dialog_reroll_pokemon_novamente),
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 50.dp)
-                    .padding(horizontal = 20.dp),
-                onFinished = { showButtons = true }
-            )
+                TypewriterDialogBox(
+                    text = stringResource(id = R.string.dialog_reroll_pokemon_novamente),
+                    onFinished = { showButtons = true }
+                )
+            }
         }
 
         // Camada de Fade
@@ -147,9 +157,13 @@ fun TypewriterDialogBox(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(140.dp)
-            .background(Color.White, RoundedCornerShape(15.dp))
-            .border(5.dp, Color(0xFF29B6F6), RoundedCornerShape(15.dp))
+            .height(150.dp)
+            .background(Color.White, RoundedCornerShape(20.dp))
+            .border(
+                width = 6.dp,
+                color = Color(0xFF00B0FF),
+                shape = RoundedCornerShape(20.dp)
+            )
             .padding(20.dp)
     ) {
         Text(
@@ -157,7 +171,8 @@ fun TypewriterDialogBox(
             color = Color.Black,
             fontSize = 22.sp,
             fontFamily = FontFamily.Monospace,
-            lineHeight = 28.sp
+            fontWeight = FontWeight.Bold,
+            lineHeight = 30.sp
         )
     }
 }
@@ -169,7 +184,7 @@ fun PokemonChoiceButton(text: String, onClick: () -> Unit) {
             .width(130.dp)
             .height(55.dp)
             .background(Color.White, RoundedCornerShape(30.dp))
-            .border(4.dp, Color(0xFF29B6F6), RoundedCornerShape(30.dp))
+            .border(4.dp, Color(0xFF00B0FF), RoundedCornerShape(30.dp))
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
@@ -193,5 +208,16 @@ fun PokeBallSilhouetteBackground(modifier: Modifier = Modifier) {
         drawLine(Color(0xFF080808), Offset(center.x - radius, center.y), Offset(center.x + radius, center.y), strokeWidth = 25f)
         drawCircle(Color(0xFF080808), radius * 0.22f, center, style = Fill)
         drawCircle(Color(0xFF121212), radius * 0.12f, center, style = Fill)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PerguntaScreenPreview() {
+    PokeRandomTheme {
+        PerguntaScreen(
+            navController = rememberNavController(),
+            onNaoClick = {}
+        )
     }
 }

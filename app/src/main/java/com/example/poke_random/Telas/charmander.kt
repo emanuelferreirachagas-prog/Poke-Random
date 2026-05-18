@@ -15,10 +15,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -35,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.poke_random.R
 import com.example.poke_random.ui.theme.PokeRandomTheme
+import kotlinx.coroutines.yield
+import kotlinx.coroutines.delay
 
 @Composable
 fun CharmanderScreen(
@@ -42,6 +47,11 @@ fun CharmanderScreen(
     onSimClick: () -> Unit = {},
     onNaoClick: () -> Unit = {}
 ) {
+    // Adicionado para otimização de transição
+    LaunchedEffect(Unit) {
+        yield()
+    }
+
     val infiniteTransition = rememberInfiniteTransition(label = "Rotate")
     val angle by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -65,7 +75,7 @@ fun CharmanderScreen(
 
         // 2. POKÉBOLA NO TOPO (Grande e rotacionando)
         Image(
-            painter = painterResource(id = R.drawable.oficial_1), // Ou o recurso da silhueta da pokébola
+            painter = painterResource(id = R.drawable.d6c8052634e93ac1f777a3e38b2ebf8a_removebg_preview), // Ou o recurso da silhueta da pokébola
             contentDescription = null,
             modifier = Modifier
                 .size(450.dp)
@@ -78,7 +88,7 @@ fun CharmanderScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 30.dp),
+                .padding(horizontal = 24.dp), // Ajustado padding horizontal
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(100.dp))
@@ -89,7 +99,7 @@ fun CharmanderScreen(
                 modifier = Modifier.size(220.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ellipse_6), // Certifique-se que esta imagem tem o brilho/fogo ao fundo
+                    painter = painterResource(id = R.drawable.gemini_generated_image_3v14hs3v14hs3v14_removebg_preview), // Certifique-se que esta imagem tem o brilho/fogo ao fundo
                     contentDescription = "Charmander",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Fit
@@ -102,22 +112,17 @@ fun CharmanderScreen(
             Text(
                 text = stringResource(id = R.string.pokemon_name_charmander),
                 style = TextStyle(
-                fontSize = 40.sp, // Aumentado para destacar o gradiente
-                fontWeight = FontWeight.ExtraBold,
-                fontFamily = FontFamily.SansSerif,
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF000000),       // Topo das letras branco
-                        Color(0xFF310606),       // Meio das letras cinza
-                        Color(0xFF000000),       // Base das letras branco
-                        Color(0xFF000000),       // Laranja mais claro no topo
+                    fontSize = 40.sp, // Aumentado para destacar o gradiente
+                    fontWeight = FontWeight.ExtraBold,
+                    fontFamily = FontFamily.SansSerif,
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color.White, Color(0xFFBDBDBD), Color(0xFF043556))
+                    ),
+                    shadow = Shadow(
+                        color = Color.Black,
+                        blurRadius = 10f
                     )
-                ),
-                shadow = Shadow(
-                    color = Color.Black,
-                    blurRadius = 10f
                 )
-            )
             )
 
             // 5. BADGE DO TIPO (Com Gradiente estilo a imagem)
@@ -169,7 +174,7 @@ fun CharmanderScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 15.dp),
+                    .padding(bottom = 20.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 CharmanderChoiceButton(text = "Sim", onClick = onSimClick)
@@ -180,7 +185,7 @@ fun CharmanderScreen(
             CharmanderDialogBox(
                 text = "Deseja roletar seu pokemon novamente? ..."
             )
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(60.dp))
         }
     }
 }
@@ -192,16 +197,16 @@ fun CharmanderChoiceButton(
 ) {
     Box(
         modifier = Modifier
-            .width(130.dp)
-            .height(50.dp)
-            .background(Color.White, RoundedCornerShape(25.dp))
-            .border(4.dp, Color(0xFF00B0FF), RoundedCornerShape(25.dp))
+            .width(135.dp)
+            .height(55.dp)
+            .background(Color.White, RoundedCornerShape(30.dp))
+            .border(4.dp, Color(0xFF00B0FF), RoundedCornerShape(30.dp))
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
-            color = Color(0xFFD32F2F), // Vermelho
+            color = Color.Red, // Vermelho
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace
@@ -213,22 +218,33 @@ fun CharmanderChoiceButton(
 fun CharmanderDialogBox(
     text: String
 ) {
+    var displayedText by remember { mutableStateOf("") }
+
+    LaunchedEffect(text) {
+        delay(500)
+        text.forEachIndexed { index, _ ->
+            displayedText = text.substring(0, index + 1)
+            delay(40)
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
+            .height(130.dp)
             .background(Color.White, RoundedCornerShape(20.dp))
-            .border(5.dp, Color(0xFF00B0FF), RoundedCornerShape(20.dp))
-            .padding(16.dp),
-        contentAlignment = Alignment.CenterStart
+            .border(6.dp, Color(0xFF00B0FF), RoundedCornerShape(20.dp))
+            .padding(20.dp),
+        contentAlignment = Alignment.TopStart
     ) {
         Text(
-            text = text,
+            text = displayedText,
             color = Color.Black,
-            fontSize = 18.sp,
+            fontSize = 20.sp,
             fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.Start
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Start,
+            lineHeight = 28.sp
         )
     }
 }
