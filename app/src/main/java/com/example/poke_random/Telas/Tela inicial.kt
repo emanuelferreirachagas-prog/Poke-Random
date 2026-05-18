@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -50,7 +51,11 @@ import kotlinx.coroutines.delay
 fun TelaInicial(modifier: Modifier = Modifier, navController: NavController? = null) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val exoPlayer = remember {
+    val isPreview = LocalInspectionMode.current
+
+    // 1. Gerenciamento do ExoPlayer (Música de fundo)
+    // Desativado no Preview para evitar erros de renderização e conflitos de áudio
+    val exoPlayer = if (isPreview) null else remember {
         ExoPlayer.Builder(context).build().apply {
             val mediaItem = MediaItem.fromUri(
                 RawResourceDataSource.buildRawResourceUri(R.raw.pokemon_music)
@@ -68,7 +73,8 @@ fun TelaInicial(modifier: Modifier = Modifier, navController: NavController? = n
         }
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(exoPlayer) {
+        if (exoPlayer == null) return@LaunchedEffect
         var v = 0f
         exoPlayer.volume = v
         while (v < 0.1f) { // Sobe até 30%
@@ -79,7 +85,8 @@ fun TelaInicial(modifier: Modifier = Modifier, navController: NavController? = n
     }
 
     // 2. Gerenciamento de Efeitos Sonoros (SoundPool)
-    val soundPool = remember {
+    // Desativado no Preview para evitar java.lang.ClassNotFoundException: android.media.SoundPool
+    val soundPool = if (isPreview) null else remember {
         SoundPool.Builder()
             .setMaxStreams(5)
             .setAudioAttributes(
@@ -89,28 +96,34 @@ fun TelaInicial(modifier: Modifier = Modifier, navController: NavController? = n
                     .build()
             ).build()
     }
-    val soundId = remember { soundPool.load(context, R.raw.click_sound, 1) }
+    val soundId = if (isPreview || soundPool == null) 0 else remember(soundPool) { 
+        soundPool.load(context, R.raw.click_sound, 1) 
+    }
 
     // Gerenciamento do ciclo de vida da música e efeitos sonoros
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            when (event) {
-                Lifecycle.Event.ON_PAUSE -> exoPlayer.pause()
-                Lifecycle.Event.ON_RESUME -> exoPlayer.play()
-                else -> {}
+    DisposableEffect(lifecycleOwner, exoPlayer, soundPool) {
+        if (isPreview) {
+            onDispose {}
+        } else {
+            val observer = LifecycleEventObserver { _, event ->
+                when (event) {
+                    Lifecycle.Event.ON_PAUSE -> exoPlayer?.pause()
+                    Lifecycle.Event.ON_RESUME -> exoPlayer?.play()
+                    else -> {}
+                }
             }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
+            lifecycleOwner.lifecycle.addObserver(observer)
 
-        // Inicia a música se estiver em estado RESUME
-        if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-            exoPlayer.play()
-        }
+            // Inicia a música se estiver em estado RESUME
+            if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                exoPlayer?.play()
+            }
 
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-            exoPlayer.release()
-            soundPool.release()
+            onDispose {
+                lifecycleOwner.lifecycle.removeObserver(observer)
+                exoPlayer?.release()
+                soundPool?.release()
+            }
         }
     }
 
@@ -151,7 +164,7 @@ fun TelaInicial(modifier: Modifier = Modifier, navController: NavController? = n
             PokemonButton(
                 text = stringResource(id = R.string.button_start),
                 onClick = {
-                    soundPool.play(soundId, 1f, 1f, 0, 0, 1f)
+                    soundPool?.play(soundId, 1f, 1f, 0, 0, 1f)
                     navController?.navigate("menu")
                 }
             )
@@ -162,7 +175,7 @@ fun TelaInicial(modifier: Modifier = Modifier, navController: NavController? = n
             PokemonButton(
                 text = stringResource(id = R.string.button_options),
                 onClick = {
-                    soundPool.play(soundId, 1f, 1f, 0, 0, 1f)
+                    soundPool?.play(soundId, 1f, 1f, 0, 0, 1f)
                 }
             )
         }
