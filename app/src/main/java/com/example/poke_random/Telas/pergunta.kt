@@ -118,7 +118,7 @@ fun PerguntaScreen(
                         // BOTÃO NÃO
                         PokemonChoiceButton(
                             text = "Não", 
-                            onClick = onNaoClick 
+                            onClick = {navController.navigate("tela_inicial")}
                         )
                     }
                 }

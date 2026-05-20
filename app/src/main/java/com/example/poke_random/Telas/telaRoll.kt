@@ -46,8 +46,6 @@ fun TelaRoll(onFinished: (String) -> Unit) {
             .build()
         SoundPool.Builder().setMaxStreams(1).setAudioAttributes(attributes).build()
     }
-    
-    val soundId = remember { soundPool.load(context, R.raw.click_sound, 1) }
 
     DisposableEffect(Unit) {
         onDispose { soundPool.release() }
@@ -79,9 +77,6 @@ fun TelaRoll(onFinished: (String) -> Unit) {
         repeat(totalDeTrocas) { i ->
             // Sorteia um novo index aleatório
             indexAtual = Random.nextInt(lista.size)
-
-            // Toca o som sem atrasar a animação
-            soundPool.play(soundId, 1f, 1f, 0, 0, 1f)
 
             // Efeito de frenagem (vai ficando mais lento)
             if (i > 25) tempoDelay += 60L

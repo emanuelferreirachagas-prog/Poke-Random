@@ -96,9 +96,6 @@ fun TelaInicial(modifier: Modifier = Modifier, navController: NavController? = n
                     .build()
             ).build()
     }
-    val soundId = if (isPreview || soundPool == null) 0 else remember(soundPool) { 
-        soundPool.load(context, R.raw.click_sound, 1) 
-    }
 
     // Gerenciamento do ciclo de vida da música e efeitos sonoros
     DisposableEffect(lifecycleOwner, exoPlayer, soundPool) {
@@ -164,8 +161,7 @@ fun TelaInicial(modifier: Modifier = Modifier, navController: NavController? = n
             PokemonButton(
                 text = stringResource(id = R.string.button_start),
                 onClick = {
-                    soundPool?.play(soundId, 1f, 1f, 0, 0, 1f)
-                    navController?.navigate("menu")
+                        navController?.navigate("menu")
                 }
             )
 
@@ -174,9 +170,7 @@ fun TelaInicial(modifier: Modifier = Modifier, navController: NavController? = n
             // Botão Opções
             PokemonButton(
                 text = stringResource(id = R.string.button_options),
-                onClick = {
-                    soundPool?.play(soundId, 1f, 1f, 0, 0, 1f)
-                }
+                onClick = {}
             )
         }
     }
